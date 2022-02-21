@@ -171,6 +171,8 @@ private fun String.asPttButtonEvent(): PttButtonEvent? {
         contains("C:VM*")  -> PttButtonEvent(PttButton.VOL_UP, false)   //B01 Headset (i.e. Inrico)
         contains("C:VP*")  -> PttButtonEvent(PttButton.VOL_DOWN, false) //B01 Headset (i.e. Inrico)
         contains("C:SOS*")  -> PttButtonEvent(PttButton.EMERGENCY, false) //B01 Headset (i.e. Inrico)
+        first() == '1'           -> PttButtonEvent(PttButton.PTT1, true) //B01 headset (Non-branded)
+        first() == '0'           -> PttButtonEvent(PttButton.PTT1, false) //B01 headset (Non-branded)
         else                -> null
     }
 }
