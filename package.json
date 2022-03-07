@@ -1,6 +1,6 @@
 {
   "name": "capacitor-plugin-headset",
-  "version": "0.3.1",
+  "version": "0.4.9",
   "description": "Capacitor plugin for Bluetooth headsets",
   "main": "dist/plugin.cjs.js",
   "module": "dist/esm/index.js",

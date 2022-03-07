@@ -16,7 +16,7 @@ import java.text.Normalizer
 import java.util.*
 import java.util.regex.Pattern
 
-class HeadsetManager(context: Context) : BluetoothProfile.ServiceListener, AccessoryManager {
+class HeadsetManager(context: Context, type: HeadsetTypes) : BluetoothProfile.ServiceListener, AccessoryManager {
 
     //private val TAG = HeadsetPlugin::class.java.simpleName
     override val connected: Boolean
@@ -27,6 +27,7 @@ class HeadsetManager(context: Context) : BluetoothProfile.ServiceListener, Acces
         get() = buttonEventSubject
 
     private val contextRef = WeakReference(context)
+    private val headsetType: HeadsetTypes = type;
     private val connectedSubject = BehaviorSubject.create<Boolean>()
     private val buttonEventSubject = PublishSubject.create<PttButtonEvent>()
     private var headsetProfile: BluetoothHeadset? = null
@@ -50,7 +51,14 @@ class HeadsetManager(context: Context) : BluetoothProfile.ServiceListener, Acces
     }
 
     init {
-        bluetoothAdapter?.getProfileProxy(context, this, BluetoothProfile.HEADSET)
+        when (type)
+        {
+            HeadsetTypes.HYS -> bluetoothAdapter?.getProfileProxy(context, this, BluetoothProfile.GATT)
+            else -> { // B01 by default too
+                bluetoothAdapter?.getProfileProxy(context, this, BluetoothProfile.HEADSET)
+            }
+        }
+
         context.apply {
             val filter = IntentFilter().apply {
                 addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
@@ -122,7 +130,7 @@ class HeadsetManager(context: Context) : BluetoothProfile.ServiceListener, Acces
         val device = ainaDevice ?: return
         Log.v(TAG, "connecting SPP socket...")
         sppSocket = try {
-            device.connectSppSocket()
+            device.connectSppSocket(headsetType)
         } catch (e: Throwable) {
             Log.w(TAG, "failed to connect SPP socket")
             return
