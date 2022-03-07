@@ -1,13 +1,25 @@
 import { WebPlugin } from '@capacitor/core';
 
-import type { HeadsetPluginStartOptions, IHeadsetPlugin } from './definitions';
+import type { HeadsetPluginSetActiveOptions, HeadsetPluginStartOptions, IHeadsetPlugin } from './definitions';
 
 export class HeadsetPluginWeb extends WebPlugin implements IHeadsetPlugin {
+  async checkPermissions(): Promise<PermissionStatus> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  async requestPermissions(): Promise<PermissionStatus> {
+    throw this.unimplemented('Not implemented on web.');
+  }
+  
   async start(options: HeadsetPluginStartOptions): Promise<void> {
-    console.log('start '+ options.type);
+    throw this.unimplemented('Not implemented on web.');
   }
 
   async stop(): Promise<void> {
-    console.log('stop');
+    throw this.unimplemented('Not implemented on web.');
+  }
+
+  async setActive(options: HeadsetPluginSetActiveOptions): Promise<void> {
+    throw this.unimplemented('Not implemented on web.');
   }
 }
