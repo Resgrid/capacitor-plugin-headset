@@ -15,7 +15,7 @@ public class HeadsetPlugin: CAPPlugin {
                 let state: String
                 switch permission {
                 case .microphone:
-                    state = AVCaptureDevice.authorizationStatus(for: .audio).authorizationState
+                    state = String(AVCaptureDevice.authorizationStatus(for: .audio).rawValue)
                 }
                 result[permission.rawValue] = state
             }
