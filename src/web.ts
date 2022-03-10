@@ -12,7 +12,7 @@ export class HeadsetPluginWeb extends WebPlugin implements IHeadsetPlugin {
   }
   
   async start(options: HeadsetPluginStartOptions): Promise<void> {
-    throw this.unimplemented('Not implemented on web.');
+    throw this.unimplemented('Not implemented on web. ' + options.type);
   }
 
   async stop(): Promise<void> {
@@ -20,6 +20,6 @@ export class HeadsetPluginWeb extends WebPlugin implements IHeadsetPlugin {
   }
 
   async setActive(options: HeadsetPluginSetActiveOptions): Promise<void> {
-    throw this.unimplemented('Not implemented on web.');
+    throw this.unimplemented('Not implemented on web.' + options.isActive);
   }
 }
