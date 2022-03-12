@@ -8,6 +8,12 @@ import AVFoundation
  */
 @objc(HeadsetPlugin)
 public class HeadsetPlugin: CAPPlugin {
+    //var audioController: AudioController?;
+    
+    public override func load() {
+        //self.audioController = AudioController()
+        AudioController.init()
+    }
     
     @objc override public func checkPermissions(_ call: CAPPluginCall) {
             var result: [String: Any] = [:]
@@ -53,4 +59,51 @@ public class HeadsetPlugin: CAPPlugin {
         call.resolve();
     }
     
+    @objc func setAudioMode(_ call: CAPPluginCall) {
+        let audioMode = call.getString("audioMode") ?? "speaker"
+        
+        if (audioMode == "earpiece") {
+            AudioController.selectAudioOutputEarpiece()
+        } else if (audioMode == "speaker" || audioMode == "ringtone") {
+            AudioController.selectAudioOutputSpeaker()
+        } else if (audioMode == "normal") {
+            AudioController.selectAudioOutputEarpiece()
+        }
+        
+        call.resolve();
+    }
+    
+    @objc func toggleBluetoothSco(_ call: CAPPluginCall) {
+        let audioMode = call.getBool("scoOn") ?? false
+        call.resolve();
+    }
+    
+    @objc func toggleSpeakerphone(_ call: CAPPluginCall) {
+        let audioMode = call.getBool("speakerphoneOn") ?? false
+        call.resolve();
+    }
+    
+    @objc func getOutputDevices(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    
+    @objc func getAudioMode(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    
+    @objc func isSpeakerphoneOn(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    
+    @objc func isBluetoothScoOn(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    
+    @objc func hasBuiltInEarpiece(_ call: CAPPluginCall) {
+        call.resolve();
+    }
+    
+    @objc func hasBuiltInSpeaker(_ call: CAPPluginCall) {
+        call.resolve();
+    }
 }
