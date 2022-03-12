@@ -8,18 +8,28 @@ import android.app.Activity
 import android.content.Context
 import io.reactivex.disposables.CompositeDisposable
 import android.Manifest.permission_group.MICROPHONE
-
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.getcapacitor.PluginCall
-
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.Permission
+import com.getcapacitor.JSObject
+
 
 
 @CapacitorPlugin(name = "HeadsetPlugin",
         permissions = [
             Permission(
-                    strings = [ Manifest.permission.RECORD_AUDIO,
+                    strings = [
+                        Manifest.permission.RECORD_AUDIO,
                     ], alias = "MICROPHONE"
+            ),
+            Permission(
+                    strings = [
+                        Manifest.permission.BLUETOOTH,
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                        Manifest.permission.BLUETOOTH_ADMIN,
+                    ], alias = "BLUETOOTH"
             )
         ])
 class HeadsetPlugin : Plugin() {
@@ -31,6 +41,7 @@ class HeadsetPlugin : Plugin() {
     private var type: HeadsetTypes = HeadsetTypes.B01
     private val disposables = CompositeDisposable()
     private val headsetManager by lazy { HeadsetManager(activity.applicationContext, type) }
+    private val audioToggle by lazy { AudioToggle(activity.applicationContext) }
 
     override fun load() {
 
@@ -110,6 +121,102 @@ class HeadsetPlugin : Plugin() {
             false
 
         call.resolve()
+    }
+
+    @PluginMethod
+    public fun setAudioMode(call: PluginCall) {
+
+        var mode = call.getString("audioMode")
+
+        if (mode != null) {
+            val result = audioToggle.setAudioMode(mode!!)
+        }
+
+        call.resolve()
+    }
+
+    @PluginMethod
+    public fun toggleBluetoothSco(call: PluginCall) {
+
+        var mode = call.getBoolean("scoOn")
+
+        if (mode != null) {
+            val result = audioToggle.setBluetoothScoOn(mode!!)
+        }
+
+        call.resolve()
+    }
+
+    @PluginMethod
+    public fun toggleSpeakerphone(call: PluginCall) {
+
+        var mode = call.getBoolean("speakerphoneOn")
+
+        if (mode != null) {
+            val result = audioToggle.setSpeakerphoneOn(mode!!)
+        }
+
+        call.resolve()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @PluginMethod
+    public fun getOutputDevices(call: PluginCall) {
+
+        val result = audioToggle.getOutputDevices()
+        call.resolve(result)
+    }
+
+    @PluginMethod
+    public fun getAudioMode(call: PluginCall) {
+
+        val audioMode = audioToggle.getAudioMode()
+        val ret = JSObject()
+        ret.put("mode", audioMode)
+
+        call.resolve(ret)
+    }
+
+    @PluginMethod
+    public fun isSpeakerphoneOn(call: PluginCall) {
+
+        val speakerphoneOn = audioToggle.isSpeakerphoneOn()
+        val ret = JSObject()
+        ret.put("speakerphoneOn", speakerphoneOn)
+
+        call.resolve(ret)
+    }
+
+    @PluginMethod
+    public fun isBluetoothScoOn(call: PluginCall) {
+
+        val bluetoothScoOn = audioToggle.isBluetoothScoOn()
+        val ret = JSObject()
+        ret.put("bluetoothScoOn", bluetoothScoOn)
+
+        call.resolve(ret)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @PluginMethod
+    public fun hasBuiltInEarpiece(call: PluginCall) {
+
+        val builtInEarpiece = audioToggle.hasBuiltInEarpiece()
+        val ret = JSObject()
+        ret.put("builtInEarpiece", builtInEarpiece)
+
+        call.resolve(ret)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    @PluginMethod
+    public fun hasBuiltInSpeaker(call: PluginCall) {
+
+        val builtInSpeaker = audioToggle.hasBuiltInSpeaker()
+        val ret = JSObject()
+        ret.put("builtInSpeaker", builtInSpeaker)
+
+        call.resolve(ret)
     }
 
     @PluginMethod

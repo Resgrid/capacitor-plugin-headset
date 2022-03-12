@@ -6,6 +6,15 @@ export interface IHeadsetPlugin {
   start(options: HeadsetPluginStartOptions): Promise<void>;
   stop(): Promise<void>;
   setActive(options: HeadsetPluginSetActiveOptions): Promise<void>;
+  setAudioMode(options: SetAudioModeOptions): Promise<void>;
+  toggleBluetoothSco(options: ToggleBluetoothScoOptions): Promise<void>;
+  toggleSpeakerphone(options: ToggleSpeakerphoneOptions): Promise<void>;
+  getOutputDevices(): Promise<any>;
+  getAudioMode(): Promise<{ mode: string }>;
+  isSpeakerphoneOn(): Promise<{ speakerphoneOn: boolean }>;
+  isBluetoothScoOn(): Promise<{ bluetoothScoOn: boolean }>;
+  hasBuiltInEarpiece(): Promise<{ builtInEarpiece: boolean }>;
+  hasBuiltInSpeaker(): Promise<{ builtInSpeaker: boolean }>;
   addListener(eventName: 'onHeadsetPress', listenerFunc: (res: { event: string }) => void): PluginListenerHandle;
   addListener(eventName: 'onHeadsetRelease', listenerFunc: (res: { event: string }) => void): PluginListenerHandle;
   addListener(eventName: 'onHeadsetToggle', listenerFunc: (res: { event: string }) => void): PluginListenerHandle;
@@ -32,4 +41,26 @@ export interface HeadsetPluginSetActiveOptions {
    * false if no communications channel is active (i.e. app is not connected to audio/video)
    */
    isActive: boolean;
+}
+
+export interface SetAudioModeOptions {
+  /**
+   * Type of audio mode to set.
+   * OPTIONS: bluetooth, earpiece, speaker, ringtone, normal
+   */
+   audioMode: string;
+}
+
+export interface ToggleBluetoothScoOptions {
+  /**
+   * Turn BluetoothSco On or Off
+   */
+   scoOn: boolean;
+}
+
+export interface ToggleSpeakerphoneOptions {
+  /**
+   * Turn speakerphone On or Off
+   */
+   speakerphoneOn: boolean;
 }
